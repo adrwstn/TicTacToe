@@ -2,3 +2,4 @@ Src/*.class
 .DS_Store
 TicTacToeApplication.iml
 .idea
+README.md
