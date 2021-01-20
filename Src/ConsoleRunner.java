@@ -40,13 +40,13 @@ public class ConsoleRunner {
          * class to process user responses as strings.
          */
         prompt_playAsX();
-        if (scanner.nextLine()=="Y")
+        if (scanner.nextLine().equals("Y"))
             playerIsX = true;
         playerChar = 'X';
 
 
         prompt_playSmartAI();
-        if (scanner.nextLine()=="Y")
+        if (scanner.nextLine().equals("Y"))
             playSmartAI = true;
 
         Board start = new Board();
