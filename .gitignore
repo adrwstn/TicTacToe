@@ -1,9 +1,10 @@
 <<<<<<< HEAD
-Assign1\ code/out/
-.idea
-assign1\ code/*.class
+Assign1\ code/out
+Assign1\ code/.idea
+Assign1\ code/*.class
 .DS_Store
-Assign1\ Info
+Assign1\ code/.DS_Store
+Assign1\ Info/
 =======
 assign1\ code/out/
 .idea
