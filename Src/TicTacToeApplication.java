@@ -11,6 +11,7 @@ public class TicTacToeApplication {
         /*
          * TBD
          */
-        System.out.print("START");
+        System.out.println("--START--");
+        ConsoleRunner run = new ConsoleRunner();
     }
 }

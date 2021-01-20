@@ -1,7 +1,7 @@
 /**
  * Realization of AI interface using simplistic random placement strategy.
  *
- * @author INSERT YOUR NAME(S) HERE
+ * @author Andrew Stone
  */
 
 import java.util.Random;
@@ -30,6 +30,7 @@ public class DumbAI implements AI {
         /*
          * TBD
          */
+
 
         // TEMPORARY GARBAGE CODE TO TEST COMPILATION
         Move thisMove = new Move(0,0,'X');

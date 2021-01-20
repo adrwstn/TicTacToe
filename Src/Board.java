@@ -8,7 +8,7 @@ public class Board {
 
 	private char[][] board = new char[3][3];
 
-	/*
+	/* Ignore this comment about mutability, I know the board is entirely immutable...
 	 * Each row_ is 7 char.
 	 * row_separator is immutable.
 	 * Indices 1,3,5 are mutable (i.e whitespaces are mutable)
@@ -37,49 +37,21 @@ public class Board {
 	 */
 	public Board(Board other, Move move) {
 
-		Board nextMove = new Board();
-		nextMove.board = other.board;
-		nextMove.board[move.getJ()][move.getI()] = move.getPiece();
-		/*
-		 * Board is suppose to be immutable however i'm not sure how to use the 'other' board
-		 * as starting point unless I use a copy constructor (maybe i should?)
-		 */
-	}
+		 /* iterate through 'other' board, using get() to create copy of 'other' board
+		  * apply move to the new copied board
+		  */
+		Board copiedBoard = new Board();
 
-	/*
-	 *                  [DEAD CODE - PENDING]
-	 * maps move input (column) to appropriate whitespace position of char array(1, 3, 5)
-	 * i.e. (move input, position) { (0, 1), (1, 3), (2, 5) }
-	 */
-	private int mapInputToColumn(int moveInput_Column) {
-		int  mappedPosition_column = -1;
-		switch (moveInput_Column) {
-			case 0:
-				mappedPosition_column = 1;
-			case 1:
-				mappedPosition_column = 3;
-			case 2:
-				mappedPosition_column = 5;
+		for (int row = 0; row < other.board.length; row++)
+		{
+			for (int col = 0; col < other.board[row].length; col++)
+			{
+				copiedBoard.board[row][col] = other.get(row,col);
+			}
 		}
-		return mappedPosition_column;
-	}
 
-	/*
-	 *                  [DEAD CODE - PENDING]
-	 * maps move input (row) to appropriate row (top, middle, bottom)
-	 * i.e. (move input, position) { (0, top), (1, middle), (2, bottom) }
-	 */
-	private char[] mapInputToRow(int moveInput_Row) {
-		char mappedPosition_row[] = row_top;
-		switch (moveInput_Row) {
-			case 0:
-				mappedPosition_row = row_top;
-			case 1:
-				mappedPosition_row = row_middle;
-			case 2:
-				mappedPosition_row = row_middle;
-		}
-		return mappedPosition_row;
+		// apply 'move' to copied board
+		copiedBoard.board[move.getJ()][move.getI()] = move.getPiece();
 	}
 
 	/**
