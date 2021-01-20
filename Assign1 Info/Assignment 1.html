@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+<header>
+<h1>Assignment 1</h1>
+</header>
+<div>
+<p><strong>Due: Wednesday, January 20 @ 11:00 p.m.</strong></p>
+<p>In this assignment you will provide the implementation (in Java) for the system whose design is given below.&nbsp; This system provides the user the ability to play the game tic-tac-toe from the command-line.&nbsp; The following represents a typical output: <a href="/d2l/common/dialogs/quickLink/quickLink.d2l?ou=389120&amp;type=content&amp;rcode=mun-1464549" target="_self">a1_ouput.txt</a>.</p>
+<p>Template code that can be used for this assignment has been provided. &nbsp;You should replace all &ldquo;TBD&rdquo; comments with actual working code. &nbsp;Some files have been provided and require no changes (see corresponding comment in header).</p>
+<ul style="list-style-type: disc;">
+<li><a href="/d2l/common/dialogs/quickLink/quickLink.d2l?ou=389120&amp;type=content&amp;rcode=mun-1464550" target="_self">a1_template.zip</a></li>
+</ul>
+<h3>Class Diagram</h3>
+<p>Complete the Java classes corresponding to all of those depicted below.&nbsp; You should add private members and methods to help flesh out these classes.</p>
+<p><a href="http://www.cs.mun.ca/~av/courses/5895-w17/wp-content/uploads/2017/01/classDiagram_NEW.png"><img src="http://www.cs.mun.ca/~av/courses/5895-w17/wp-content/uploads/2017/01/classDiagram_NEW.png" alt="" width="886" height="491" srcset="http://www.cs.mun.ca/~av/courses/5895-current/wp-content/uploads/2017/01/classDiagram_NEW.png 886w, http://www.cs.mun.ca/~av/courses/5895-current/wp-content/uploads/2017/01/classDiagram_NEW-300x166.png 300w, http://www.cs.mun.ca/~av/courses/5895-current/wp-content/uploads/2017/01/classDiagram_NEW-768x426.png 768w" sizes="(max-width: 886px) 100vw, 886px" style="border-width: 0px; border-image-width: initial; height: auto; max-width: 100%;" /><img src="classDiagram.png" alt="" title="" style="max-width: 100%;" data-d2l-editor-default-img-style="true" /></a></p>
+<p>&nbsp;</p>
+<p>These classes have the following responsibilities:</p>
+<ul style="list-style-type: disc;">
+<li>TicTacToeApplication: Contains the main method. Creates a ConsoleRunner and then calls its mainLoop method.</li>
+<li>ConsoleRunner: &nbsp;Prompts the user to determine the parameters of the Game&nbsp;constructor.&nbsp; Creates a Game and manages the alternating calls to the &lsquo;place&rsquo; methods in Game.&nbsp; Prompts the user for inputs and outputs the state of the board to the console.</li>
+<li>Game: Represents the logic of the game in terms of detecting wins or draws.&nbsp; Also places new pieces for the human player or AI.</li>
+<li>Board: An <span style="text-decoration: underline;"><strong>immutable</strong></span> class that represents the state of the 3&times;3 tic-tac-toe board.&nbsp; An immutable object cannot be changed.</li>
+<li>GameStatus: Enum type representing the possible states of a running game.</li>
+<li>Move: Represents a move (by the player or the AI) to a particular cell.</li>
+<li>AI: Interface stipulating that an AI is a class that implements &lsquo;chooseMove&rsquo;.</li>
+<li>SmartAI and DumbAI: Classes realizing the AI interface using different gameplay strategies.</li>
+</ul>
+<h3>Sequence Diagram for Initial Object Creation</h3>
+<p>The following sequence diagram depicts how the initial objects are created.</p>
+<p><a href="http://www.cs.mun.ca/~av/courses/5895-w17/wp-content/uploads/2017/01/creationSequence_NEW.png"><img src="http://www.cs.mun.ca/~av/courses/5895-w17/wp-content/uploads/2017/01/creationSequence_NEW.png" alt="" width="833" height="489" srcset="http://www.cs.mun.ca/~av/courses/5895-current/wp-content/uploads/2017/01/creationSequence_NEW.png 833w, http://www.cs.mun.ca/~av/courses/5895-current/wp-content/uploads/2017/01/creationSequence_NEW-300x176.png 300w, http://www.cs.mun.ca/~av/courses/5895-current/wp-content/uploads/2017/01/creationSequence_NEW-768x451.png 768w" sizes="(max-width: 833px) 100vw, 833px" style="border-width: 0px; border-image-width: initial; height: auto; max-width: 100%;" /><img src="creationSequence.png" alt="" title="" style="max-width: 100%;" data-d2l-editor-default-img-style="true" /></a></p>
+<h3>Sequence Diagram for the Main Loop</h3>
+<p>The following sequence diagram shows a typical sequence of calls when the human player is represented by &lsquo;X&rsquo;.&nbsp; Note that in several places the Board is interrogated by a sequence of calls to &lsquo;get&rsquo;.&nbsp; These calls will probably occur within a loop (not shown).</p>
+<p><img src="mainLoopSequence.png" alt="" title="" style="max-width: 100%;" data-d2l-editor-default-img-style="true" /><a href="http://www.cs.mun.ca/~av/courses/5895-w17/wp-content/uploads/2017/01/mainLoopSequence_NEW.png"><img src="http://www.cs.mun.ca/~av/courses/5895-w17/wp-content/uploads/2017/01/mainLoopSequence_NEW.png" alt="" width="873" height="812" srcset="http://www.cs.mun.ca/~av/courses/5895-current/wp-content/uploads/2017/01/mainLoopSequence_NEW.png 873w, http://www.cs.mun.ca/~av/courses/5895-current/wp-content/uploads/2017/01/mainLoopSequence_NEW-300x279.png 300w, http://www.cs.mun.ca/~av/courses/5895-current/wp-content/uploads/2017/01/mainLoopSequence_NEW-768x714.png 768w" sizes="(max-width: 873px) 100vw, 873px" style="border-width: 0px; border-image-width: initial; height: auto; max-width: 100%;" /></a></p>
+<h3>Notes:</h3>
+<ul style="list-style-type: disc;">
+<li>In this version of tic-tac-toe, X always goes first.</li>
+<li>Utilize java.util.Scanner to parse input from the user.&nbsp; You need not be concerned about the user entering bad values.&nbsp; It is important that all console-related code be placed in ConsoleRunner.</li>
+<li>The user will enter the address of a cell as a pair of (x, y) coordinates.&nbsp; Cell (0, 0) lies in the upper-left with (2, 2) at bottom-right.</li>
+<li>DumbAI vs. SmartAI: For DumbAI, simply select an available position at random (use java.util.Random). &nbsp;<strong>Implementing the SmartAI class is not required.</strong></li>
+<li>Feel free to add private members and methods (in fact, you must).</li>
+<li>The diagrams above do not specify everything that needs to be done!&nbsp; Remeber, we are using UML as sketch.</li>
+<li>Java features you will need to use:
+<ul style="list-style-type: disc;">
+<li>Classes Move and Board are <a href="https://docs.oracle.com/javase/tutorial/essential/concurrency/immutable.html" target="_blank" rel="noopener">immutable</a>.&nbsp; This may surprise you for Board especially, since you have no option to modify a Board.&nbsp; This gives you no choice but creating a new Board for every move made using the Board(Board, Move) constructor.&nbsp; However, it also means that it is safe to share a Board object with other classes.</li>
+<li><a href="https://docs.oracle.com/javase/tutorial/java/javaOO/enum.html" target="_blank" rel="noopener">Java Enum types</a></li>
+</ul>
+</li>
+</ul>
+<h3>Submission</h3>
+<p>First you will need to enrol yourself in the appropriate group in Brightspace.&nbsp; Under &ldquo;Communication&rdquo; look for &ldquo;A1 Groups&rdquo; and enrol yourself in one.&nbsp; If submitting as an individual, you still need to join a group.&nbsp; If submitting as a pair, make sure both individuals are added to the group.</p>
+<p>Package all .java and .class files in a zip or jar file and upload to the A1 folder.&nbsp; If you are doing this assignment in pairs then clearly indicate both partner names in the comments for TicTacToeApplication so that we can also see both names in the code.</p>
+</div>
+</body>
+</html>
