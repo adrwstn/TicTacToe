@@ -13,7 +13,8 @@ public class DumbAI implements AI {
     /*
      * TBD: Create additional private members if useful.
      */
-    
+    char piece;
+
     /**
      * Construct a DumbAI.
      * 
@@ -21,19 +22,17 @@ public class DumbAI implements AI {
      *              the 'X'.
      */
     public DumbAI(boolean aiIsX) {
-        /*
-         * TBD
-         */
+        if (aiIsX) {
+            piece = 'X';
+        }
+        else piece = 'O';
     }
 
     public Move chooseMove(Board board) {
-        /*
-         * TBD
-         */
 
+        int I = random.nextInt() % 2;
+        int J = random.nextInt() % 2;
 
-        // TEMPORARY GARBAGE CODE TO TEST COMPILATION
-        Move thisMove = new Move(0,0,'X');
-        return thisMove;
+        return new Move(I, J, piece);
     }
 }

@@ -15,12 +15,12 @@ public class ConsoleRunner {
      * Should the human player be the X?  Note that X always
      * goes first.
      */
-    private boolean playerIsX = false;
+    private boolean playerIsX;
     private Game game;
 
     // Additional Members:
     private boolean playSmartAI = false;
-    private char playerChar = 'O';
+    private char playerPiece;
 
     
     // Use to process text input from the user.
@@ -34,8 +34,8 @@ public class ConsoleRunner {
          * Use the 'next' method of Scanner and the 'matches' of the String
          * class to process user responses as strings.
          */
-        game = new Game(prompt_playAsX(),prompt_playSmartAI());
 
+        game = new Game(prompt_playAsX(),prompt_playSmartAI());
     }
 
     /**
@@ -45,18 +45,24 @@ public class ConsoleRunner {
     public void mainLoop() {
         Board start = new Board();
         System.out.println(start.toString());
-        Board next = new Board(start,promptMove_player());
-        System.out.println(next.toString());
 
         while (game.getStatus() == GameStatus.IN_PROGRESS)
         {
-        //  TODO: undo the mess I made of this and getStatus()
-            next = new Board(next,promptMove_player());
-            System.out.println(next.toString());
-            game.getStatus();
+            System.out.println("check #1");
 
+            Move personMove = promptMove_player();
+            if (game.placePlayerPiece(personMove.getI(), personMove.getJ())) {
+                start = new Board(game.getBoard(), personMove);
+                System.out.println(start.toString());
+
+                System.out.println("check #2");
+            }
+            game.checkWin_all(start);
+            game.aiPlacePiece();
+            game.checkWin_all(start);
+            System.out.println("check #3");
         }
-
+        System.out.println("check #4");
     }
 
     // Self-explanatory
@@ -64,7 +70,7 @@ public class ConsoleRunner {
         System.out.println("Do you want to play as X (Y/N):");
         if (scanner.nextLine().equals("Y")) {
             playerIsX = true;
-            playerChar = 'X';
+            playerPiece = 'X';
             return true;
         }
         return false;
@@ -90,6 +96,12 @@ public class ConsoleRunner {
         holder_x = scanner.nextInt();
         System.out.println("Enter desired y-coordinate:");
         holder_y = scanner.nextInt();
-        return new Move(holder_x, holder_y, playerChar);
+
+        if (!game.placePlayerPiece(holder_x,holder_y)) {
+            System.out.println("Move invalid, try different coordinates ");
+            promptMove_player();
+        }
+
+        return new Move(holder_x, holder_y, playerPiece);
     }
 }

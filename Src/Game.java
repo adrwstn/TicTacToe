@@ -12,70 +12,43 @@ public class Game {
 	private GameStatus status;
 	private AI ai;
 
-	// Additional members
-	private char winnerIs;          // holds Winner (X or O)
-
-	// push char's from each cell onto stack, if stack.pop() is same char 3 times, char ___ wins
-	Stack<Character> winStack = new Stack<>();
-
+	// Additional field(s)
+	char personPiece;
 
 	/**
 	 * Construct a new Game according to the given parameters.
 	 */
 	public Game(boolean playerIsX, boolean challenging) {
 		status = GameStatus.IN_PROGRESS;
-		/*
-		 * TODO: Implement Game(boolean playerIsX, boolean challenging)
-		 */
+		boolean aiIsX;
+
+		if (playerIsX) {
+			aiIsX = false;
+			personPiece = 'X';
+		} else {
+			aiIsX = true;
+			personPiece = 'O';
+		}
+
+		// TODO: ARE WE NOT SUPPOSE TO IMPLEMENT SMARTAI() ?
+		if (challenging) {
+//			ai = new SmartAI(aiIsX);
+			ai = new DumbAI(aiIsX);
+		} else ai = new DumbAI(aiIsX);
 	}
 
 	/**
 	 * Return a copy of the board's current contents.
 	 */
-	public Board getBoard() { return this.board; }
+	public Board getBoard() {
+		return this.board;
+	}
 
 	/**
 	 * Get the game's status.
 	 */
 	public GameStatus getStatus() {
-		return status;
-	}
-
-	// check horizontals
-	public void checkWin_horizontal() {
-		// TODO: Implement checkWin_horizontal()
-	}
-
-	// check verticals
-	public void checkWin_vertical() {
-		// TODO: Implement checkWin_vertical()
-	}
-
-	/* check primary diagonal:
-	 * nothing special here
-	 * */
-	public void checkWin_primaryDiagonal() {
-		for (int row = 0; row < 3; row++) {
-			for (int col = 0; col < 3; col++) {
-				if (row == col) {
-					winStack.push(board.get(row, col));
-				}
-			}
-		}
-	}
-
-	/* check secondary diagonal:
-	 * for any square matrix of size n, elements of secondary diagonal
-	 * occur when ( i + j ) == ( n - 1)
-	 */
-	public void checkWin_secondaryDiagonal() {
-		for (int row = 0; row < 3; row++) {
-			for (int col = 0; col < 3; col++) {
-				if ((row + col) == (3 - 1)) {
-					winStack.push(board.get(row, col));
-				}
-			}
-		}
+		return this.status;
 	}
 
 	/**
@@ -90,47 +63,97 @@ public class Game {
 	public boolean placePlayerPiece(int i, int j) {
 		// TODO: check precondition
 
+		Move personMove = new Move(i, j, personPiece);
 		// check if cell is empty
 		if (board.get(i, j) != ' ')
 			return false;
 
-		// check is desired move is in range
-		return 0 <= i && i < 3 && 0 <= j && j < 3;
+		board = new Board(this.getBoard(),personMove);
 
+		// check is desired move is in range
+		return ( (0 <= i && i < 3) && (0 <= j && j < 3));
 	}
 
 	/**
 	 * @precondition status == IN_PROGRESS
 	 */
 	public void aiPlacePiece() {
-		/*
-		 * TODO: Implement aiPlacePiece()
-		 */
+		Move aiMove = ai.chooseMove(board);
+		while (!placePlayerPiece(aiMove.getI(),aiMove.getJ())) {
+			aiMove = ai.chooseMove(board);
+		}
+
+		board = new Board(board, ai.chooseMove(board));
+
 	}
 
-	// checkForWinner() updates GameStatus status
-	private void checkForWinner() {
-		if (winStack.size() == 3) {
-			char firstChar, secondChar, thirdChar;
+	// Checks for winner and updates game status if there's a winner
+	public void checkWin_all(Board board) {
+		checkWin_horizontal(board);
+		checkWin_vertical(board);
+		checkWin_primaryDiagonal(board);
+		checkWin_secondaryDiagonal(board);
+		declareWinner();
+	}
 
-			firstChar = winStack.pop();
-//			System.out.println("firstChar: " + firstChar);
+	// -- Win condition below --
 
-			secondChar = winStack.pop();
-//			System.out.println("secondChar: " + secondChar);
-
-			thirdChar = winStack.pop();
-//			System.out.println("thirdChar: " + thirdChar);
-
-			if (firstChar == secondChar && secondChar == thirdChar) {
-				winnerIs = firstChar;
-				if (winnerIs == 'X') {
+	// check horizontals
+	private void checkWin_horizontal(Board board) {
+		for (int col = 0; col < 3; col++) {
+			if (board.get(0, col) == board.get(1, col) && board.get(1, col) == board.get(2, col)) {
+				if (board.get(0, col) == 'X') {
 					status = GameStatus.X_WON;
-				} else if (winnerIs == 'O') {
+				}
+				if (board.get(0, col) == 'O') {
 					status = GameStatus.O_WON;
 				}
 			}
-			declareWinner();
+		}
+	}
+
+	// check verticals
+	private void checkWin_vertical(Board board) {
+		for (int row = 0; row < 3; row++) {
+			if (board.get(row, 0) == board.get(row, 1) && board.get(row, 1) == board.get(row, 2)) {
+				if (board.get(row, 0) == 'X') {
+					status = GameStatus.X_WON;
+				}
+				if (board.get(row, 0) == 'O') {
+					status = GameStatus.O_WON;
+				}
+			}
+		}
+	}
+
+	/* check primary diagonal:
+	 * nothing special here
+	 * */
+	private void checkWin_primaryDiagonal(Board board) {
+		char tmp = ' ';
+		if (board.get(0, 0) == board.get(1, 1) && board.get(1, 1) == board.get(2, 2))
+			tmp = board.get(0, 0);
+		if (tmp == 'X') {
+			status = GameStatus.X_WON;
+		}
+		if (tmp == 'O') {
+			status = GameStatus.O_WON;
+		}
+	}
+
+	/* check secondary diagonal:
+	 * for any square matrix of size n, elements of secondary diagonal
+	 * occur when ( i + j ) == ( n - 1)
+	 */
+	private void checkWin_secondaryDiagonal(Board board) {
+		char tmp = ' ';
+		if (board.get(0, 2) == board.get(1, 1) && board.get(1, 1) == board.get(2, 0))
+			tmp = board.get(0, 2);
+		if (tmp == 'X') {
+			status = GameStatus.X_WON;
+		}
+		if (tmp == 'O') {
+			status = GameStatus.O_WON;
 		}
 	}
 
