@@ -16,51 +16,26 @@ public class ConsoleRunner {
      * goes first.
      */
     private boolean playerIsX = false;
-
     private Game game;
-    
-    // Use to process text input from the user.
-    private Scanner scanner = new Scanner(System.in);
 
-    /*
-     * TBD: Create additional private members if useful.
-     */
+    // Additional Members:
     private boolean playSmartAI = false;
     private char playerChar = 'O';
 
+    
+    // Use to process text input from the user.
+    private Scanner scanner = new Scanner(System.in);
 
     /**
      * Constructor
      */
     public ConsoleRunner() {    
         /*
-         * TBD
-         *
          * Use the 'next' method of Scanner and the 'matches' of the String
          * class to process user responses as strings.
          */
-        prompt_playAsX();
-        if (scanner.nextLine().equals("Y"))
-            playerIsX = true;
-        playerChar = 'X';
+        game = new Game(prompt_playAsX(),prompt_playSmartAI());
 
-
-        prompt_playSmartAI();
-        if (scanner.nextLine().equals("Y"))
-            playSmartAI = true;
-
-        Board start = new Board();
-        System.out.println(start.toString());
-
-        int holder_x, holder_y;
-        prompt_coordinates_x();
-        holder_x = scanner.nextInt();
-        prompt_coordinates_y();
-        holder_y = scanner.nextInt();
-        Move player_move = new Move(holder_x, holder_y, playerChar);
-
-        Board next = new Board(start,player_move);
-        System.out.println(next.toString());
     }
 
     /**
@@ -68,31 +43,53 @@ public class ConsoleRunner {
      * when one party has won or there has been a draw.
      */
     public void mainLoop() {
-        /*
-         * TBD
-         *
-         * Use the 'nextInt' method of Scanner class to read user responses as
-         * integers.
-         *
-         * There is enough work to do here that you may want to introduce
-         * private methods (i.e. helper methods).
-         */
+        Board start = new Board();
+        System.out.println(start.toString());
+        Board next = new Board(start,promptMove_player());
+        System.out.println(next.toString());
+
+        while (game.getStatus() == GameStatus.IN_PROGRESS)
+        {
+        //  TODO: undo the mess I made of this and getStatus()
+            next = new Board(next,promptMove_player());
+            System.out.println(next.toString());
+            game.getStatus();
+
+        }
+
     }
 
-    private void prompt_playAsX() {
+    // Self-explanatory
+    private boolean prompt_playAsX() {
         System.out.println("Do you want to play as X (Y/N):");
+        if (scanner.nextLine().equals("Y")) {
+            playerIsX = true;
+            playerChar = 'X';
+            return true;
+        }
+        return false;
     }
 
-    private void prompt_playSmartAI() {
+    // Self-explanatory
+    private boolean prompt_playSmartAI() {
         System.out.println("Do you want a challenge (Y/N):");
+        if (scanner.nextLine().equals("Y")) {
+            playSmartAI = true;
+            return true;
+        }
+        return false;
     }
 
-    private void prompt_coordinates_x() {
+     /* Wrapper for receiving player input (move)
+      * Assumes move is valid
+      * @return a Move instance
+      * */
+    private Move promptMove_player() {
+        int holder_x, holder_y;
         System.out.println("Enter desired x-coordinate:");
-    }
-
-    private void prompt_coordinates_y() {
+        holder_x = scanner.nextInt();
         System.out.println("Enter desired y-coordinate:");
+        holder_y = scanner.nextInt();
+        return new Move(holder_x, holder_y, playerChar);
     }
-
 }

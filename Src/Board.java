@@ -75,10 +75,9 @@ public class Board {
 			for (int col = 0; col < board[row].length; col++)
 			{
 				if (board[row][col] == ' ')
-					return true;
+					return false;
 			}
 		}
-		return false;
+		return true;
 	}
 }
-	//char[rows][columns]

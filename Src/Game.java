@@ -12,33 +12,19 @@ public class Game {
 	private GameStatus status;
 	private AI ai;
 
-	/*
-	 * TBD: Create additional private members if useful.
-	 */
+	// Additional members
+	private char winnerIs;          // holds Winner (X or O)
 
 	// push char's from each cell onto stack, if stack.pop() is same char 3 times, char ___ wins
-	private Stack<Character> winStack = new Stack<>();
-	private char firstChar, secondChar, thirdChar;
-
-    //	only to be called AFTER 3 calls to winStack.push() have been made;
-	private void winStack_pop() {
-		firstChar = winStack.pop();
-		secondChar = winStack.pop();
-		thirdChar = winStack.pop();
-	}
-
-	private boolean winStack_winner() {
-		return firstChar == secondChar && secondChar == thirdChar;
-		// TODO: figure out how i'm going to determine if X or O won
-	}
+	Stack<Character> winStack = new Stack<>();
 
 
 	/**
 	 * Construct a new Game according to the given parameters.
 	 */
 	public Game(boolean playerIsX, boolean challenging) {
+		status = GameStatus.IN_PROGRESS;
 		/*
-		 * TBD
 		 * TODO: Implement Game(boolean playerIsX, boolean challenging)
 		 */
 	}
@@ -46,63 +32,43 @@ public class Game {
 	/**
 	 * Return a copy of the board's current contents.
 	 */
-	public Board getBoard() {
-		/*
-		 * TBD
-		 */
-		// TODO: Implement getBoard()
-		// NOT TOO SURE ABOUT THIS?
-		return this.board;
-	}
+	public Board getBoard() { return this.board; }
 
 	/**
 	 * Get the game's status.
 	 */
 	public GameStatus getStatus() {
-		/*
-		 * TBD
-		 * TODO: getStatus()
-		 */
-
-		// does whitespace exists ? IN_PROGRESS : (Winner XOR Draw)
-
-		// TODO: IMPLEMENT THIS YOU LAZY BASTARD!
-		return null;
+		return status;
 	}
+
 	// check horizontals
-	public boolean checkWin_horizontal() {
+	public void checkWin_horizontal() {
 		// TODO: Implement checkWin_horizontal()
-		return false;
 	}
 
 	// check verticals
-	public boolean checkWin_vertical() {
+	public void checkWin_vertical() {
 		// TODO: Implement checkWin_vertical()
-		return false;
 	}
 
-	public boolean checkWin_diagonal() {
-
-		/* check primary diagonal:
-		 * nothing special here
-		 * */
+	/* check primary diagonal:
+	 * nothing special here
+	 * */
+	public void checkWin_primaryDiagonal() {
 		for (int row = 0; row < 3; row++) {
 			for (int col = 0; col < 3; col++) {
 				if (row == col) {
 					winStack.push(board.get(row, col));
 				}
-
 			}
 		}
-		winStack_pop();
-		if (winStack_winner())
-			return true;
+	}
 
-
-		/* check secondary diagonal:
-		 * for any square matrix of size n, elements of secondary diagonal
-		 * occur when ( i + j ) == ( n - 1)
-		 */
+	/* check secondary diagonal:
+	 * for any square matrix of size n, elements of secondary diagonal
+	 * occur when ( i + j ) == ( n - 1)
+	 */
+	public void checkWin_secondaryDiagonal() {
 		for (int row = 0; row < 3; row++) {
 			for (int col = 0; col < 3; col++) {
 				if ((row + col) == (3 - 1)) {
@@ -110,9 +76,6 @@ public class Game {
 				}
 			}
 		}
-		winStack_pop();
-		return winStack_winner();
-
 	}
 
 	/**
@@ -125,7 +88,7 @@ public class Game {
 	 * @precondition status == IN_PROGRESS
 	 */
 	public boolean placePlayerPiece(int i, int j) {
-		// TODO: deal with precondition
+		// TODO: check precondition
 
 		// check if cell is empty
 		if (board.get(i, j) != ' ')
@@ -141,8 +104,42 @@ public class Game {
 	 */
 	public void aiPlacePiece() {
 		/*
-		 * TBD
 		 * TODO: Implement aiPlacePiece()
 		 */
 	}
+
+	// checkForWinner() updates GameStatus status
+	private void checkForWinner() {
+		if (winStack.size() == 3) {
+			char firstChar, secondChar, thirdChar;
+
+			firstChar = winStack.pop();
+//			System.out.println("firstChar: " + firstChar);
+
+			secondChar = winStack.pop();
+//			System.out.println("secondChar: " + secondChar);
+
+			thirdChar = winStack.pop();
+//			System.out.println("thirdChar: " + thirdChar);
+
+			if (firstChar == secondChar && secondChar == thirdChar) {
+				winnerIs = firstChar;
+				if (winnerIs == 'X') {
+					status = GameStatus.X_WON;
+				} else if (winnerIs == 'O') {
+					status = GameStatus.O_WON;
+				}
+			}
+			declareWinner();
+		}
+	}
+
+	private void declareWinner() {
+		if (status == GameStatus.X_WON) {
+			System.out.println("'X' has won");
+		} else if (status == GameStatus.O_WON) {
+			System.out.println("'O' has won");
+		}
+	}
 }
+
