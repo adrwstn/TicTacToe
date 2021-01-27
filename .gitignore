@@ -2,3 +2,5 @@ Src/*.class
 .DS_Store
 TicTacToeApplication.iml
 .idea
+/out
+Src.zip
