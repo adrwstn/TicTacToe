@@ -12,11 +12,9 @@ public class Board {
 	 * Construct an empty board (contains all space char's).
 	 */
 	public Board() {
-//		System.out.println("Board()");
-		for (int row = 0; row < board.length; row++)
-		{
-			for (int col = 0; col < board[row].length; col++)
-			{
+		//		System.out.println("Board()");
+		for (int row = 0; row < board.length; row++) {
+			for (int col = 0; col < board[row].length; col++) {
 				board[row][col] = ' ';
 			}
 		}
@@ -28,19 +26,17 @@ public class Board {
 	 */
 	public Board(Board other, Move move) {
 
-		 /* iterate through 'other' board, using get() to create copy of 'other' board
-		  * apply move to the new copied board
-		  */
+		/* iterate through 'other' board, using get() to create copy of 'other' board
+		 * apply move to the new copied board
+		 */
 
-		for (int row = 0; row < other.board.length; row++)
-		{
-			for (int col = 0; col < other.board[row].length; col++)
-			{
-				board[row][col] = other.get(row,col);
+		for (int row = 0; row < 3; row++) {
+			for (int col = 0; col < 3; col++) {
+				this.board[row][col] = other.get(row, col);
 			}
 		}
 		// apply 'move' to copied board
-		board[move.getJ()][move.getI()] = move.getPiece();
+		this.board[move.getJ()][move.getI()] = move.getPiece();
 	}
 
 	/**
@@ -62,18 +58,16 @@ public class Board {
 	 * Get the entry of the board at column i, row j.  Both indices should
 	 * be in the range [0, 2].
 	 */
-	public char get(int i, int j) {
-		return board[i][j];
+	public char get(int col, int row) {
+		return board[col][row];
 	}
 
 	/**
 	 * @return true if there remain no empty spots on the board.
 	 */
 	public boolean isFull() {
-		for (int row = 0; row < board.length; row++)
-		{
-			for (int col = 0; col < board[row].length; col++)
-			{
+		for (int col = 0; col < board.length; col++) {
+			for (int row = 0; row < board[col].length; row++) {
 				if (board[row][col] == ' ')
 					return false;
 			}

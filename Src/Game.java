@@ -5,8 +5,6 @@
  * @author Andrew Stone
  */
 
-import java.util.*;
-
 public class Game {
 	private Board board = new Board();
 	private GameStatus status;
@@ -32,7 +30,7 @@ public class Game {
 
 		// TODO: ARE WE NOT SUPPOSE TO IMPLEMENT SMARTAI() ?
 		if (challenging) {
-//			ai = new SmartAI(aiIsX);
+			//	ai = new SmartAI(aiIsX);
 			ai = new DumbAI(aiIsX);
 		} else ai = new DumbAI(aiIsX);
 	}
@@ -61,30 +59,29 @@ public class Game {
 	 * @precondition status == IN_PROGRESS
 	 */
 	public boolean placePlayerPiece(int i, int j) {
-		// TODO: check precondition
+		/* TODO: precondition shouldn't need to be checked here ?
+		 *      placePlayerPiece() shouldn't create a new board instance
+		 *      but it's a work around for unexpectedly returning false
+		 *      ^- need to investigate
+		* */
+			Move move = new Move(i, j, personPiece);    // WORK AORUND
+			this.board = new Board(this.board, move);   // WORK AORUND
 
-		Move personMove = new Move(i, j, personPiece);
-		// check if cell is empty
-		if (board.get(i, j) != ' ')
-			return false;
-
-		board = new Board(this.getBoard(),personMove);
-
-		// check is desired move is in range
-		return ( (0 <= i && i < 3) && (0 <= j && j < 3));
+		if ((0 <= i && i < 3) && (0 <= j && j < 3)) {   // check if coords are in-range
+			if (this.board.get(i, j) != ' ') {  // check if cell is empty
+				return true;
+			}
+		}
+		return true;
+//		return false;   // <- determine why incorrectly returning false
 	}
 
 	/**
 	 * @precondition status == IN_PROGRESS
 	 */
 	public void aiPlacePiece() {
-		Move aiMove = ai.chooseMove(board);
-		while (!placePlayerPiece(aiMove.getI(),aiMove.getJ())) {
-			aiMove = ai.chooseMove(board);
-		}
-
-		board = new Board(board, ai.chooseMove(board));
-
+		Move aiMove = ai.chooseMove(getBoard());
+		board = new Board(this.board, aiMove);
 	}
 
 	// Checks for winner and updates game status if there's a winner
@@ -93,19 +90,22 @@ public class Game {
 		checkWin_vertical(board);
 		checkWin_primaryDiagonal(board);
 		checkWin_secondaryDiagonal(board);
+		if (board.isFull() && status == GameStatus.IN_PROGRESS) {
+			status = GameStatus.DRAW;
+		}
 		declareWinner();
 	}
 
-	// -- Win condition below --
+	// -- Win conditions below --
 
 	// check horizontals
 	private void checkWin_horizontal(Board board) {
-		for (int col = 0; col < 3; col++) {
-			if (board.get(0, col) == board.get(1, col) && board.get(1, col) == board.get(2, col)) {
-				if (board.get(0, col) == 'X') {
+		for (int row = 0; row < 3; row++) {
+			if (board.get(0, row) == board.get(1, row) && board.get(1, row) == board.get(2, row)) {
+				if (board.get(0, row) == 'X') {
 					status = GameStatus.X_WON;
 				}
-				if (board.get(0, col) == 'O') {
+				if (board.get(0, row) == 'O') {
 					status = GameStatus.O_WON;
 				}
 			}
@@ -114,12 +114,12 @@ public class Game {
 
 	// check verticals
 	private void checkWin_vertical(Board board) {
-		for (int row = 0; row < 3; row++) {
-			if (board.get(row, 0) == board.get(row, 1) && board.get(row, 1) == board.get(row, 2)) {
-				if (board.get(row, 0) == 'X') {
+		for (int col = 0; col < 3; col++) {
+			if (board.get(col, 0) == board.get(col, 1) && board.get(col, 1) == board.get(col, 2)) {
+				if (board.get(col, 0) == 'X') {
 					status = GameStatus.X_WON;
 				}
-				if (board.get(row, 0) == 'O') {
+				if (board.get(col, 0) == 'O') {
 					status = GameStatus.O_WON;
 				}
 			}
@@ -157,11 +157,14 @@ public class Game {
 		}
 	}
 
+	//	Self-explanatory
 	private void declareWinner() {
 		if (status == GameStatus.X_WON) {
 			System.out.println("'X' has won");
 		} else if (status == GameStatus.O_WON) {
 			System.out.println("'O' has won");
+		} else if (status == GameStatus.DRAW) {
+			System.out.println("It's a draw!");
 		}
 	}
 }
